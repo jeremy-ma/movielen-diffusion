@@ -88,8 +88,8 @@ L_norm = laplacian_matrix(A, 'normalized');
 ratio_diagL_diagNL = sum(diag(L)) / sum(diag(L_norm));
 alpha_nL = alpha_L * ratio_diagL_diagNL;
 
-diff_matrix_norm = diffusion_matrix(L_norm, alpha_nL);
-% diff_matrix_norm = diffusion_matrix(L_norm, 1);
+% diff_matrix_norm = diffusion_matrix(L_norm, alpha_nL);
+diff_matrix_norm = diffusion_matrix(L_norm, 9);
 
 distances_norm = distance_matrix(diff_matrix_norm,movieList);
 
@@ -129,14 +129,14 @@ disp([ratio, ratio_norm])
 %% A test ranges over a range of alpha finding quantitative measures
 
 clear all; close all; clc;
-alpha_nL_range = logspace(-2, 2, 200); % alpha for normalized Laplacian
+alpha_nL_range = logspace(-2, 1, 200); % alpha for normalized Laplacian
 
 % movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
 % movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
-% movieList = [29,34,360,12,22,461,31,35,161,200];
-% movie_classes = {[1,2,3],[4,5,6,7],[8,9,10]};
-movieList = [49,66,277,313,293,214,248,477,290,498];
-movie_classes = {[1,2,3,4,5],[6,7,8,9,10]};
+movieList = [29,34,360,12,22,461,31,35,161,200];
+movie_classes = {[1,2,3],[4,5,6,7],[8,9,10]};
+% movieList = [49,66,277,313,293,214,248,477,290,498];
+% movie_classes = {[1,2,3,4,5],[6,7,8,9,10]};
 
 load('undir_tags.mat');
 A = to_similarity(diff_tags,28);
@@ -164,10 +164,23 @@ for alpha_nL_idx = 1:length(alpha_nL_range)
 end
 
 %% Optional, visulization tools.
+
+% Heatmap & Boxplot
 %
 figure; subplot(2, 1, 1); imagesc(results); colorbar
 subplot(2, 1, 2); boxplot(results); grid on
 
+% Dendrogram for the best alpha used in normalized Laplacian.
+%
+idx = find(results(:, 2) <= 1.001 * min(results(:, 2))); idx = floor(median(idx));
+alpha_best = alpha_nL_range(idx);
+diff_matrix_norm = diffusion_matrix(L_norm, alpha_best);
+distances_norm = distance_matrix(diff_matrix_norm, movieList);
+Z = linkage(squareform(distances_norm), 'ward');
+figure; dendrogram(Z);
+
+% Double mdscale scatter plots
+%
 options = statset('MaxIter', 500);
 md = mdscale(distances, 2, 'Options', options); 
 md_norm = mdscale(distances_norm, 2, 'Options', options);
