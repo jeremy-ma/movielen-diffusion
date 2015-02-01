@@ -3,6 +3,7 @@
 %A = to_similarity(diff_tags,28);
 A = A1;
 A(A < 0.42) = 0;
+A = A * 100;
 L = laplacian_matrix(A,'unnormalized');
 diff_matrix = diffusion_matrix(L,0.0085);
 %1.8141e-04
@@ -12,8 +13,8 @@ diff_matrix = diffusion_matrix(L,0.0085);
 %23, 283, 434 Matrix 
 %64, 82, 113 LOTR
 %33 96 426 godfather
-%movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
-%movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
+movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
+movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
 
 %categories
 %29 mission impossible (1996(
@@ -49,8 +50,8 @@ diff_matrix = diffusion_matrix(L,0.0085);
 %498 lethal weapon 3
 
 
-movieList = [49,66,277,313,293,214,248,477,290,498];
-movie_classes = {[1,2,3,4,5],[6,7,8,9,10]};
+%movieList = [49,66,277,313,293,214,248,477,290,498];
+%movie_classes = {[1,2,3,4,5],[6,7,8,9,10]};
 
 
 
