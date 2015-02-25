@@ -81,7 +81,12 @@ subplot(2, 1, 2); boxplot(results); grid on
 
 % Dendrogram for the best alpha used in normalized Laplacian.
 %
-idx = find(results(:, 2) <= 1.001 * min(results(:, 2))); idx = floor(median(idx));
+%idx = find(results(:, 2) <= 1.001 * min(results(:, 2))); idx = floor(median(idx));
+
+% find alpha with highest rand_index scores
+max_scores = find(results(:,2) == max(results(:,2)));
+idx = max_scores(1);
+
 alpha_best = alpha_nL_range(idx);
 diff_matrix_norm = diffusion_matrix(L_norm, alpha_best);
 distances_norm = distance_matrix(diff_matrix_norm, movieList);
