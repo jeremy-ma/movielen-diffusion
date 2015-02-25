@@ -5,7 +5,7 @@ load('undir_tags.mat')
 % similarity matrix
 
 A = to_similarity(diff_tags,28);
-% A = A1;
+%A = A1;
 %A(A < 0.42) = 0; % WH: is this line really necessary? (Forgot to comment it out!)
 
 L = laplacian_matrix(A,'unnormalized');
@@ -136,16 +136,16 @@ disp([ratio, ratio_norm])
 clear all; close all; clc;
 alpha_nL_range = logspace(-2, 1, 200); % alpha for normalized Laplacian
 
-% movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
-% movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
-movieList = [29,34,360,12,22,461,31,35,161,200];
-movie_classes = {[1,2,3],[4,5,6,7],[8,9,10]};
+movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
+movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
+%movieList = [29,34,360,12,22,461,31,35,161,200];
+%movie_classes = {[1,2,3],[4,5,6,7],[8,9,10]};
 % movieList = [49,66,277,313,293,214,248,477,290,498];
 % movie_classes = {[1,2,3,4,5],[6,7,8,9,10]};
 
 load('undir_tags.mat');
 A = to_similarity(diff_tags,28);
-A(A < 0.42) = 0; % WH: is this line really necessary?
+%A(A < 0.42) = 0; % WH: is this line really necessary?
 L = laplacian_matrix(A, 'unnormalized'); L_norm = laplacian_matrix(A, 'normalized');
 ratio_diagL_diagNL = sum(diag(L)) / sum(diag(L_norm));
 results = zeros(length(alpha_nL_range), 2);
