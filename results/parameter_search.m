@@ -46,12 +46,15 @@ for threshold=thresholds
         distances = distance_matrix(diff_matrix, movieList);
         distances_norm = distance_matrix(diff_matrix_norm,movieList);
 
-        %ratio = mean_intraclass_dist(distances,movie_classes) / mean_interclass_dist(distances,movie_classes);
-        %ratio_norm = mean_intraclass_dist(distances_norm,movie_classes) / mean_interclass_dist(distances_norm,movie_classes);
+        ratio = mean_intraclass_dist(distances,movie_classes) / mean_interclass_dist(distances,movie_classes);
+        ratio_norm = mean_intraclass_dist(distances_norm,movie_classes) / mean_interclass_dist(distances_norm,movie_classes);
         
         md_dist = mdscale(distances,length(movieList) - 1, 'Options', options); 
         md_dist_norm = mdscale(distances_norm,length(movieList) - 1, 'Options', options);
         
+% Instead of kmeans on md-scaled data, you can just kmeans on diffused
+% features. See below.
+
         pred_classes = kmeans(md_dist,length(movie_classes));
         pred_classes_norm = kmeans(md_dist_norm,length(movie_classes));
         
@@ -106,5 +109,77 @@ subplot(2, 1, 2); scatter(md_norm(:,1),md_norm(:,2), 50,linspace(1,length(movieL
 text(md_norm(:,1), md_norm(:,2), num2str(cell2mat(movie_classes)'), 'horizontal','left', 'vertical','bottom');
 grid on;
 
+%% Instead of Kmeans on mds, Kmeans on diffused features
 
+rng(14);
+
+alpha_nL_idx = 100;
+
+% Compute matrix and distances.
+%
+alpha_nL = alpha_nL_range(alpha_nL_idx);
+alpha_L = alpha_nL / ratio_diagL_diagNL;
+diff_matrix = diffusion_matrix(L, alpha_L);
+diff_matrix_norm = diffusion_matrix(L_norm, alpha_nL);
+
+% Define non-diffused instance - feature (10 x 500) matrix and then diffuse
+% feature space by diff_matrix.
+%
+X = full(sparse(1:length(movieList), movieList, ones(size(movieList)), length(movieList), 500));
+X_L = X * diff_matrix;
+X_nL = X * diff_matrix_norm;
+
+result = zeros(200, 2);
+
+% Try multiple
+for trial = 1:200
+    
+    % Your code goes here.
+    %
+    pred_classes = kmeans(X_L, length(movie_classes));
+    pred_classes_norm = kmeans(X_nL, length(movie_classes));
+    randInd = rand_index(movie_classes_ind, pred_classes);
+    randInd_norm = rand_index(movie_classes_ind, pred_classes_norm);
+    
+    results(trial, 1) = randInd;
+    results(trial, 2) = randInd_norm;
+    
+end
+
+%% Confirm stability of Kmeans using current approach
+
+rng(14);
+alpha_nL_idx = floor(rand(1) * length(alpha_nL_range));
+
+% Compute matrix and distances.
+%
+alpha_nL = alpha_nL_range(alpha_nL_idx);
+alpha_L = alpha_nL / ratio_diagL_diagNL;
+diff_matrix = diffusion_matrix(L, alpha_L);
+diff_matrix_norm = diffusion_matrix(L_norm, alpha_nL);
+distances = distance_matrix(diff_matrix, movieList);
+distances_norm = distance_matrix(diff_matrix_norm,movieList);
+
+% Initialze storage space.
+%
+result = zeros(200, 2);
+
+% Try multiple
+for trial = 1:200
+    
+    md_dist = mdscale(distances,length(movieList) - 1, 'Options', options);
+    md_dist_norm = mdscale(distances_norm,length(movieList) - 1, 'Options', options);
+    
+    pred_classes = kmeans(md_dist,length(movie_classes));
+    pred_classes_norm = kmeans(md_dist_norm,length(movie_classes));
+    
+    randInd = rand_index(movie_classes_ind, pred_classes);
+    randInd_norm = rand_index(movie_classes_ind ,pred_classes_norm);
+    
+    results(trial, 1) = randInd;
+    results(trial, 2) = randInd_norm;
+    
+end
+
+% Confirmed
 
