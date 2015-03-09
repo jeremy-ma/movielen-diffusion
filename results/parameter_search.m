@@ -27,9 +27,9 @@ ratio_best = 2;
 
 for threshold=thresholds
     
-    %A = A1;
+    A = A1;
     %A(A<threshold)=0;
-    A = to_similarity(diff_tags,threshold);
+    %A = to_similarity(diff_tags,threshold);
 
     L = laplacian_matrix(A, 'unnormalized'); L_norm = laplacian_matrix(A, 'normalized');
     ratio_diagL_diagNL = sum(diag(L)) / sum(diag(L_norm));
@@ -51,7 +51,7 @@ for threshold=thresholds
         
         md_dist = mdscale(distances,length(movieList) - 1, 'Options', options); 
         md_dist_norm = mdscale(distances_norm,length(movieList) - 1, 'Options', options);
-        
+       
 % Instead of kmeans on md-scaled data, you can just kmeans on diffused
 % features. See below.
 
