@@ -1,8 +1,8 @@
-clear all; close all; clc;
+%clear all; close all; clc;
 
-% movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
-% movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
-% movie_classes_ind = [1,2,2,2,3,3,3,4,4,4,5,5,5];
+ movieList = [2,9,17,24,23,283,434,64, 82,113,33,96,426];
+ movie_classes = {[1],[2,3,4],[5,6,7],[8,9,10],[11,12,13]};
+ movie_classes_ind = [1,2,2,2,3,3,3,4,4,4,5,5,5];
 % movieList = [29,34,360,12,22,461,31,35,161,200];
 % movie_classes = {[1,2,3],[4,5,6,7],[8,9,10]};
 % movie_classes_ind = [1,1,1,2,2,2,2,3,3,3]; 
@@ -11,9 +11,9 @@ clear all; close all; clc;
 %movie_classes_ind = [1,1,1,1,1,2,2,2,2,2]; 
 
 %comedy movies vs scifi action over a range of movie rankings
-movieList = [638, 641, 808, 524, 570, 95, 117, 629,8,675,880,23,24,622];
-movie_classes = {[638, 641, 808, 524, 570, 95, 117],[629,8,675,880,23,24,622]};
-movie_classes_ind = [1,1,1,1,1,1,1,2,2,2,2,2,2,2]; 
+%movieList = [638, 641, 808, 524, 570, 95, 117, 629,8,675,880,23,24,622];
+%movie_classes = {[638, 641, 808, 524, 570, 95, 117],[629,8,675,880,23,24,622]};
+%movie_classes_ind = [1,1,1,1,1,1,1,2,2,2,2,2,2,2]; 
 
 alpha_nL_range = logspace(-5, 1.5, 30);
 
@@ -34,7 +34,7 @@ ratio_best = 2;
 %% initialise for tag based networks
 
 %A = to_similarity(diff_tags,threshold);
-%A = to_similarity(diff_tags_1000,threshold);
+A = to_similarity(diff_tags_1000,threshold);
 %A = to_similarity(diff_tags_10000,threshold);
 
 %% inspect results on network
